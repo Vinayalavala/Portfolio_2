@@ -1,0 +1,272 @@
+'use strict';
+
+
+
+
+document.addEventListener('copy', function(event) {
+  event.preventDefault();
+});
+
+document.addEventListener('paste', function(event) {
+  event.preventDefault();
+});
+
+// Allow copy-paste inside the form only
+document.querySelector('.contact-form').addEventListener('copy', function(event) {
+  event.stopPropagation();
+});
+
+document.querySelector('.contact-form').addEventListener('paste', function(event) {
+  event.stopPropagation();
+});
+
+function sendMail(event) {
+  event.preventDefault(); // Prevent default form submission
+
+  const fullname = document.getElementById("fullname").value;
+  const email = document.getElementById("email").value;
+  const message = document.getElementById("message").value;
+
+  // Create the mailto link
+  const mailtoLink = `mailto:vinayalavalaanp@gmail.com?subject=New Inquiry from ${fullname} &body=This is ${encodeURIComponent(fullname)}%0D%0A%0D%0A ${encodeURIComponent(message)}`;
+
+  // Open the default email client
+  window.location.href = mailtoLink;
+}
+
+
+document.addEventListener("contextmenu", (event) => event.preventDefault());
+
+        // Disable Long Press (Mobile)
+        document.addEventListener("touchstart", function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+
+        document.addEventListener("keydown", function(event) {
+    // Disable Windows/Linux shortcuts
+    if (event.ctrlKey && (event.key === "s" || event.key === "u" || event.key === "p")) {
+        event.preventDefault();
+    }
+    
+    // Disable F12 (DevTools)
+    if (event.key === "F12") {
+        event.preventDefault();
+    }
+    
+    // Disable Mac Screenshot Shortcuts
+    if (event.metaKey && (event.key === "s" || event.key === "p" || event.key === "u")) {
+        event.preventDefault();
+    }
+    
+    // Attempt to block Mac screenshot shortcuts (Limited Effect)
+    if (event.metaKey && event.shiftKey && (event.key === "3" || event.key === "4" || event.key === "5")) {
+        event.preventDefault();
+        alert("Screenshots are disabled on this page.");
+    }
+});
+
+
+        // Disable Dragging (Prevent Image/Content Drag)
+        document.addEventListener("dragstart", (event) => event.preventDefault());
+
+        // Disable Copy & Paste
+        document.addEventListener("copy", (event) => event.preventDefault());
+        document.addEventListener("paste", (event) => event.preventDefault());
+
+// element toggle function
+const elementToggleFunc = function (elem) { elem.classList.toggle("active"); }
+
+
+
+// sidebar variables
+const sidebar = document.querySelector("[data-sidebar]");
+const sidebarBtn = document.querySelector("[data-sidebar-btn]");
+
+// sidebar toggle functionality for mobile
+sidebarBtn.addEventListener("click", function () { elementToggleFunc(sidebar); });
+
+
+
+// testimonials variables
+const testimonialsItem = document.querySelectorAll("[data-testimonials-item]");
+const modalContainer = document.querySelector("[data-modal-container]");
+const modalCloseBtn = document.querySelector("[data-modal-close-btn]");
+const overlay = document.querySelector("[data-overlay]");
+
+// modal variable
+const modalImg = document.querySelector("[data-modal-img]");
+const modalTitle = document.querySelector("[data-modal-title]");
+const modalText = document.querySelector("[data-modal-text]");
+
+// modal toggle function
+const testimonialsModalFunc = function () {
+  modalContainer.classList.toggle("active");
+  overlay.classList.toggle("active");
+}
+
+// add click event to all modal items
+for (let i = 0; i < testimonialsItem.length; i++) {
+
+  testimonialsItem[i].addEventListener("click", function () {
+
+    modalImg.src = this.querySelector("[data-testimonials-avatar]").src;
+    modalImg.alt = this.querySelector("[data-testimonials-avatar]").alt;
+    modalTitle.innerHTML = this.querySelector("[data-testimonials-title]").innerHTML;
+    modalText.innerHTML = this.querySelector("[data-testimonials-text]").innerHTML;
+
+    testimonialsModalFunc();
+
+  });
+
+}
+
+// add click event to modal close button
+modalCloseBtn.addEventListener("click", testimonialsModalFunc);
+overlay.addEventListener("click", testimonialsModalFunc);
+
+
+
+// custom select variables
+const select = document.querySelector("[data-select]");
+const selectItems = document.querySelectorAll("[data-select-item]");
+const selectValue = document.querySelector("[data-selecct-value]");
+const filterBtn = document.querySelectorAll("[data-filter-btn]");
+
+select.addEventListener("click", function () { elementToggleFunc(this); });
+
+// add event in all select items
+for (let i = 0; i < selectItems.length; i++) {
+  selectItems[i].addEventListener("click", function () {
+
+    let selectedValue = this.innerText.toLowerCase();
+    selectValue.innerText = this.innerText;
+    elementToggleFunc(select);
+    filterFunc(selectedValue);
+
+  });
+}
+
+// filter variables
+const filterItems = document.querySelectorAll("[data-filter-item]");
+
+const filterFunc = function (selectedValue) {
+
+  for (let i = 0; i < filterItems.length; i++) {
+
+    if (selectedValue === "all") {
+      filterItems[i].classList.add("active");
+    } else if (selectedValue === filterItems[i].dataset.category) {
+      filterItems[i].classList.add("active");
+    } else {
+      filterItems[i].classList.remove("active");
+    }
+
+  }
+
+}
+
+// add event in all filter button items for large screen
+let lastClickedBtn = filterBtn[0];
+
+for (let i = 0; i < filterBtn.length; i++) {
+
+  filterBtn[i].addEventListener("click", function () {
+
+    let selectedValue = this.innerText.toLowerCase();
+    selectValue.innerText = this.innerText;
+    filterFunc(selectedValue);
+
+    lastClickedBtn.classList.remove("active");
+    this.classList.add("active");
+    lastClickedBtn = this;
+
+  });
+
+}
+
+
+
+// contact form variables
+const form = document.querySelector("[data-form]");
+const formInputs = document.querySelectorAll("[data-form-input]");
+const formBtn = document.querySelector("[data-form-btn]");
+
+// add event to all form input field
+for (let i = 0; i < formInputs.length; i++) {
+  formInputs[i].addEventListener("input", function () {
+
+    // check form validation
+    if (form.checkValidity()) {
+      formBtn.removeAttribute("disabled");
+    } else {
+      formBtn.setAttribute("disabled", "");
+    }
+
+  });
+}
+
+
+
+// page navigation variables
+const navigationLinks = document.querySelectorAll("[data-nav-link]");
+const pages = document.querySelectorAll("[data-page]");
+
+// add event to all nav link
+for (let i = 0; i < navigationLinks.length; i++) {
+  navigationLinks[i].addEventListener("click", function () {
+
+    for (let i = 0; i < pages.length; i++) {
+      if (this.innerHTML.toLowerCase() === pages[i].dataset.page) {
+        pages[i].classList.add("active");
+        navigationLinks[i].classList.add("active");
+        window.scrollTo(0, 0);
+      } else {
+        pages[i].classList.remove("active");
+        navigationLinks[i].classList.remove("active");
+      }
+    }
+
+  });
+}
+
+let isDownloaded = localStorage.getItem("resumeDownloaded") === "true";
+
+        // Disable the download section if already downloaded
+        function checkDownloadStatus() {
+            if (isDownloaded) {
+                document.getElementById("downloadSection").classList.add("disabled");
+            }
+        }
+
+        function downloadPDF() {
+            if (isDownloaded) {
+                document.getElementById("customAlert").style.display = "block";
+                document.getElementById("overlay").style.display = "block";
+                return;
+            }
+
+            const pdfUrl = "/assets/images/resume.pdf"; // Replace with actual file path
+            const link = document.createElement("a");
+            link.href = pdfUrl;
+            link.download = "Resume.pdf"; // File name after download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Mark as downloaded in localStorage
+            localStorage.setItem("resumeDownloaded", "true");
+            isDownloaded = true;
+
+            // Disable download button
+            document.getElementById("downloadSection").classList.add("disabled");
+        }
+
+        function closeAlert() {
+            document.getElementById("customAlert").style.display = "none";
+            document.getElementById("overlay").style.display = "none";
+        }
+
+        // Check download status on page load
+        checkDownloadStatus();
